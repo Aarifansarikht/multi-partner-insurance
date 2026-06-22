@@ -103,20 +103,26 @@ and makes a feature easy to reason about (or delete) in isolation.
 
 ### Multi-partner theming (the core architectural piece)
 
-The whole brand is driven by **semantic design tokens**, the same indirection
-shadcn/ui uses:
+The whole brand is driven by **semantic design tokens** (the same indirection
+shadcn/ui uses), kept deliberately simple:
 
 - `tailwind.config.ts` maps semantic colours (`primary`, `surface`, `border`,
-  `success`, …) to CSS custom properties via `hsl(var(--token))`.
+  `success`, …) to CSS custom properties via `var(--token)`. The token values
+  are **flat hex** (e.g. `--primary: #2647c9`) — no HSL math, no opacity
+  modifiers and no gradients in the UI. Tints and hover shades are their own
+  solid tokens (`*-soft`, `*-hover`) rather than `/opacity` utilities, so the
+  palette stays predictable and fully theme-driven.
 - Each partner is **one config object** in
   [`features/partner/partners.config.ts`](src/features/partner/partners.config.ts)
-  carrying a **light** and **dark** token set.
+  carrying a **light** and **dark** token set (hex).
 - A single [`PartnerThemeProvider`](src/features/partner/PartnerThemeProvider.tsx),
   driven by Redux, writes the active partner's tokens onto `document.documentElement`
   and toggles the `dark` class. **Nothing else in the UI knows about partners** —
   every component just uses `bg-primary`, `text-foreground`, etc.
 - Light/dark mode is an **independent** toggle (`html.dark`); because each
   partner ships both token sets, the two systems compose without conflict.
+- Status colours (`success` / `warning` / `destructive`) are constant across
+  partners so their meaning never changes.
 
 **Adding a 4th partner is one object** in that config file — no other change is
 needed. Partner selection and theme are persisted, so both survive a reload.

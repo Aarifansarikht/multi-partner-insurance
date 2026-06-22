@@ -17,7 +17,7 @@ export function JourneySummary() {
         Your selection
       </p>
       <div className="mt-3 flex items-start gap-3">
-        <span className="flex size-9 items-center justify-center rounded-sm bg-primary/10 text-primary">
+        <span className="flex size-9 items-center justify-center rounded-sm bg-primary-soft text-primary">
           <PlanCategoryIcon category={selection.category} className="size-5" />
         </span>
         <div className="min-w-0">

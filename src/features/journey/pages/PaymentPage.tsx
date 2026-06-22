@@ -134,13 +134,13 @@ export default function PaymentPage() {
             {selection.planName} · annual premium (incl. GST)
           </p>
         </div>
-        <span className="hidden size-12 items-center justify-center rounded-sm bg-primary/10 text-primary sm:flex">
+        <span className="hidden size-12 items-center justify-center rounded-sm bg-primary-soft text-primary sm:flex">
           <ShieldCheck className="size-6" />
         </span>
       </div>
 
       {/* Mode-specific info */}
-      <div className="mt-4 flex gap-2.5 rounded-sm border border-border bg-muted/40 p-3.5 text-xs text-muted-foreground">
+      <div className="mt-4 flex gap-2.5 rounded-sm border border-border bg-muted p-3.5 text-xs text-muted-foreground">
         <Info className="size-4 shrink-0 text-primary" />
         {isRazorpayConfigured ? (
           <p>

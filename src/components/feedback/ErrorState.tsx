@@ -13,9 +13,9 @@ export function ErrorState({
   return (
     <div
       role="alert"
-      className="flex flex-col items-center justify-center gap-3 rounded-sm border border-dashed border-destructive/40 bg-destructive/5 px-6 py-12 text-center"
+      className="flex flex-col items-center justify-center gap-3 rounded-sm border border-dashed border-destructive bg-destructive-soft px-6 py-12 text-center"
     >
-      <span className="flex size-11 items-center justify-center rounded-sm bg-destructive/10 text-destructive">
+      <span className="flex size-11 items-center justify-center rounded-sm bg-destructive-soft text-destructive">
         <AlertTriangle className="size-5" />
       </span>
       <div className="space-y-1">

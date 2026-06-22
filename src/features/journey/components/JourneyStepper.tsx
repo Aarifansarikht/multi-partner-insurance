@@ -55,7 +55,7 @@ export function JourneyStepper() {
                 isCurrent && "border-primary bg-primary text-primary-foreground",
                 !isCurrent &&
                   isDone &&
-                  "border-success bg-success/12 text-success",
+                  "border-success bg-success-soft text-success",
                 !isCurrent &&
                   !isDone &&
                   "border-border bg-surface text-muted-foreground",
@@ -94,7 +94,7 @@ export function JourneyStepper() {
                 <span
                   className={cn(
                     "mx-3 h-px flex-1 transition-colors",
-                    isDone ? "bg-success/50" : "bg-border",
+                    isDone ? "bg-success" : "bg-border",
                   )}
                   aria-hidden
                 />

@@ -44,7 +44,7 @@ export function PartnerSwitcher() {
               onSelect={() => dispatch(setPartner(partner.id))}
               className="gap-3"
             >
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-primary-soft text-primary">
                 <partner.Icon className="size-4" />
               </span>
               <span className="min-w-0 flex-1">

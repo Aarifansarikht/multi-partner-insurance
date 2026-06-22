@@ -4,12 +4,14 @@ import animate from "tailwindcss-animate";
 /**
  * Design-system contract.
  *
- * Every color is a semantic token resolved from a CSS custom property
- * (`hsl(var(--token))`). The actual hue/sat/lightness values are written onto
- * `:root` (light) and `.dark` (dark) in src/index.css, and are *overwritten at
- * runtime* by the active partner via PartnerThemeProvider. This is the single
- * indirection that lets one Tailwind utility (`bg-primary`) rebrand the whole
- * app without any conditional logic in the component layer.
+ * Every colour is a flat hex value held in a CSS custom property and referenced
+ * as `var(--token)`. The values live on `:root` (light) and `.dark` (dark) in
+ * src/index.css and are overwritten at runtime by the active partner via
+ * PartnerThemeProvider. This single indirection lets one Tailwind utility
+ * (`bg-primary`) rebrand the whole app with no conditional logic in components.
+ *
+ * Tints/hover states are their own solid tokens (`*-soft`, `*-hover`) rather
+ * than opacity modifiers, so the palette stays simple and fully theme-driven.
  */
 const config: Config = {
   darkMode: "class",
@@ -22,48 +24,54 @@ const config: Config = {
     },
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         surface: {
-          DEFAULT: "hsl(var(--surface))",
-          foreground: "hsl(var(--surface-foreground))",
+          DEFAULT: "var(--surface)",
+          foreground: "var(--surface-foreground)",
         },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
+          hover: "var(--primary-hover)",
+          soft: "var(--primary-soft)",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
+          hover: "var(--secondary-hover)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "var(--accent)",
+          foreground: "var(--accent-foreground)",
+          soft: "var(--accent-soft)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
         },
         success: {
-          DEFAULT: "hsl(var(--success))",
-          foreground: "hsl(var(--success-foreground))",
+          DEFAULT: "var(--success)",
+          foreground: "var(--success-foreground)",
+          soft: "var(--success-soft)",
         },
         warning: {
-          DEFAULT: "hsl(var(--warning))",
-          foreground: "hsl(var(--warning-foreground))",
+          DEFAULT: "var(--warning)",
+          foreground: "var(--warning-foreground)",
+          soft: "var(--warning-soft)",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "var(--destructive)",
+          foreground: "var(--destructive-foreground)",
+          hover: "var(--destructive-hover)",
+          soft: "var(--destructive-soft)",
         },
       },
       borderRadius: {
-        // Deliberately sharp. `lg` (the shadcn default for cards) is pulled down
-        // to 4px so the whole app reads as a structured fintech surface, not a
-        // soft consumer app.
+        // Deliberately sharp — structured fintech surface, not a soft app.
         lg: "var(--radius)",
         md: "calc(var(--radius) - 1px)",
         sm: "calc(var(--radius) - 2px)",
@@ -76,12 +84,11 @@ const config: Config = {
         "2xs": ["0.6875rem", { lineHeight: "1rem", letterSpacing: "0.02em" }],
       },
       boxShadow: {
-        // Tuned low-opacity elevation — replaces shadcn's default gray boxes.
-        xs: "0 1px 2px 0 hsl(var(--shadow-color) / 0.04)",
-        sm: "0 1px 3px 0 hsl(var(--shadow-color) / 0.06), 0 1px 2px -1px hsl(var(--shadow-color) / 0.06)",
-        md: "0 4px 12px -2px hsl(var(--shadow-color) / 0.08), 0 2px 6px -2px hsl(var(--shadow-color) / 0.05)",
-        lg: "0 12px 32px -8px hsl(var(--shadow-color) / 0.12), 0 4px 10px -4px hsl(var(--shadow-color) / 0.06)",
-        focus: "0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring) / 0.55)",
+        // Fixed, simple elevation (alpha lives only in the shadow, not the palette).
+        xs: "0 1px 2px 0 rgba(15, 23, 42, 0.04)",
+        sm: "0 1px 3px 0 rgba(15, 23, 42, 0.07), 0 1px 2px -1px rgba(15, 23, 42, 0.06)",
+        md: "0 4px 12px -2px rgba(15, 23, 42, 0.10), 0 2px 6px -2px rgba(15, 23, 42, 0.06)",
+        lg: "0 12px 32px -8px rgba(15, 23, 42, 0.16), 0 4px 10px -4px rgba(15, 23, 42, 0.08)",
       },
       keyframes: {
         "accordion-down": {
@@ -92,9 +99,6 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        shimmer: {
-          "100%": { transform: "translateX(100%)" },
-        },
         "fade-in-up": {
           from: { opacity: "0", transform: "translateY(8px)" },
           to: { opacity: "1", transform: "translateY(0)" },
@@ -103,7 +107,6 @@ const config: Config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        shimmer: "shimmer 1.6s infinite",
         "fade-in-up": "fade-in-up 0.4s ease-out both",
       },
     },

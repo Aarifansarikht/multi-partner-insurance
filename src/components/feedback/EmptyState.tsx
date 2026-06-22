@@ -13,7 +13,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-sm border border-dashed border-border bg-surface/50 px-6 py-14 text-center">
+    <div className="flex flex-col items-center justify-center gap-3 rounded-sm border border-dashed border-border bg-surface px-6 py-14 text-center">
       <span className="flex size-11 items-center justify-center rounded-sm bg-muted text-muted-foreground">
         {icon ?? <SearchX className="size-5" />}
       </span>

@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
   Check,
@@ -13,6 +13,8 @@ import { useAuth } from "@/features/auth/selectors";
 import { useAppDispatch } from "@/store/hooks";
 import { startJourney } from "@/features/journey/journeySlice";
 import { PlanConfigurator } from "@/features/plans/components/PlanConfigurator";
+import { calculatePremium, normaliseCover } from "@/features/plans/premium";
+import { formatCurrency } from "@/lib/format";
 import { PlanCategoryIcon } from "@/features/plans/components/PlanCategoryIcon";
 import { PlanDetailSkeleton } from "@/features/plans/components/PlanDetailSkeleton";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +26,7 @@ import { ROUTES } from "@/lib/routes";
 
 export default function PlanDetailPage() {
   const { planId } = useParams();
+  const [params] = useSearchParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuth();
@@ -76,6 +79,17 @@ export default function PlanDetailPage() {
     }
   };
 
+  // Mirror the configurator's URL-driven selection so the mobile CTA buys the
+  // exact same cover/term the user has chosen.
+  const cover = normaliseCover(
+    plan,
+    Number(params.get("cover")) || plan.coverDefault,
+  );
+  const term = plan.terms.includes(Number(params.get("term")))
+    ? Number(params.get("term"))
+    : plan.terms[Math.floor(plan.terms.length / 2)];
+  const currentQuote = calculatePremium(plan, cover, term);
+
   return (
     <div className="container py-8 md:py-12">
       <Link
@@ -90,7 +104,7 @@ export default function PlanDetailPage() {
         <div className="space-y-8">
           <header>
             <div className="flex items-start gap-3">
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-sm bg-primary-soft text-primary">
                 <PlanCategoryIcon category={plan.category} className="size-6" />
               </span>
               <div>
@@ -124,7 +138,7 @@ export default function PlanDetailPage() {
             <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               About this plan
             </h2>
-            <p className="mt-2 leading-relaxed text-foreground/90">
+            <p className="mt-2 leading-relaxed text-foreground">
               {plan.description}
             </p>
           </section>
@@ -158,7 +172,7 @@ export default function PlanDetailPage() {
                   <span
                     className={
                       item.included
-                        ? "flex size-6 shrink-0 items-center justify-center rounded-full bg-success/12 text-success"
+                        ? "flex size-6 shrink-0 items-center justify-center rounded-full bg-success-soft text-success"
                         : "flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground"
                     }
                   >
@@ -217,6 +231,25 @@ export default function PlanDetailPage() {
         <aside className="lg:sticky lg:top-20 lg:self-start">
           <PlanConfigurator plan={plan} onBuy={handleBuy} />
         </aside>
+      </div>
+
+      {/* Mobile-only sticky buy bar so the CTA is always within reach. */}
+      <div className="sticky bottom-0 z-30 -mx-4 mt-6 flex items-center justify-between gap-3 border-t border-border bg-surface px-4 py-3 shadow-lg lg:hidden">
+        <div>
+          <p className="text-2xs uppercase tracking-wide text-muted-foreground">
+            Premium
+          </p>
+          <p className="font-display text-lg font-semibold leading-tight">
+            {formatCurrency(currentQuote.totalPremium)}
+            <span className="text-xs font-normal text-muted-foreground">
+              {" "}
+              /yr
+            </span>
+          </p>
+        </div>
+        <Button size="lg" onClick={() => handleBuy(currentQuote)}>
+          <ShieldCheck className="size-4" /> Buy now
+        </Button>
       </div>
     </div>
   );

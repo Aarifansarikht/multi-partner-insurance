@@ -22,7 +22,7 @@ function ReviewBlock({
 }) {
   return (
     <section className="rounded-sm border border-border">
-      <div className="flex items-center justify-between border-b border-border bg-muted/40 px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-border bg-muted px-4 py-2.5">
         <h3 className="text-sm font-semibold">{title}</h3>
         <Button asChild variant="ghost" size="sm" className="h-7 px-2 text-xs">
           <Link to={editTo}>
@@ -143,7 +143,7 @@ export default function ReviewPage() {
             type="checkbox"
             checked={confirmed}
             onChange={(e) => setConfirmed(e.target.checked)}
-            className="mt-0.5 size-4 accent-[hsl(var(--primary))]"
+            className="mt-0.5 size-4 accent-primary"
           />
           <span className="text-muted-foreground">
             I confirm the details above are accurate and agree to the policy

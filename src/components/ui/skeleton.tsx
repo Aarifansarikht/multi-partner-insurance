@@ -1,9 +1,8 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Shimmer skeleton. Composes the `.skeleton-shimmer` utility (defined in
- * index.css) over a muted base so loading placeholders match the shape of the
- * content they stand in for — never a bare spinner.
+ * Loading placeholder. A simple pulsing muted block (no gradient) sized to match
+ * the content it stands in for — never a bare spinner.
  */
 function Skeleton({
   className,
@@ -11,10 +10,7 @@ function Skeleton({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        "relative overflow-hidden rounded-sm bg-muted skeleton-shimmer",
-        className,
-      )}
+      className={cn("animate-pulse rounded-sm bg-muted", className)}
       {...props}
     />
   );

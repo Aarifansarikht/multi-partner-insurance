@@ -5,7 +5,7 @@ import { ROUTES } from "@/lib/routes";
 export function NotFound() {
   return (
     <div className="container flex min-h-[60vh] flex-col items-center justify-center gap-4 py-16 text-center">
-      <p className="font-display text-6xl font-bold text-muted-foreground/40">
+      <p className="font-display text-7xl font-bold text-border">
         404
       </p>
       <h1 className="text-2xl font-semibold">Page not found</h1>

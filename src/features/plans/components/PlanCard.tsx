@@ -19,7 +19,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
     <Card className="group flex h-full flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus-within:shadow-md">
       <div className="flex items-start justify-between gap-3 p-5 pb-3">
         <div className="flex items-center gap-3">
-          <span className="flex size-10 items-center justify-center rounded-sm bg-primary/10 text-primary">
+          <span className="flex size-10 items-center justify-center rounded-sm bg-primary-soft text-primary">
             <PlanCategoryIcon category={plan.category} />
           </span>
           <div>
@@ -63,7 +63,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
         </div>
         <Link
           to={ROUTES.planDetail(plan.slug)}
-          className="inline-flex items-center gap-1 self-end rounded-sm text-sm font-medium text-primary transition-colors hover:text-primary/80"
+          className="inline-flex items-center gap-1 self-end rounded-sm text-sm font-medium text-primary transition-colors hover:text-primary-hover"
           aria-label={`View details for ${plan.name}`}
         >
           Details

@@ -31,8 +31,8 @@ export default function ResultPage() {
           <span
             className={
               success
-                ? "flex size-16 items-center justify-center rounded-full bg-success/12 text-success"
-                : "flex size-16 items-center justify-center rounded-full bg-destructive/10 text-destructive"
+                ? "flex size-16 items-center justify-center rounded-full bg-success-soft text-success"
+                : "flex size-16 items-center justify-center rounded-full bg-destructive-soft text-destructive"
             }
           >
             {success ? (
@@ -52,7 +52,7 @@ export default function ResultPage() {
             : "We couldn’t process your payment. No amount has been charged — you can try again."}
         </p>
 
-        <div className="mt-6 rounded-sm border border-border bg-background/60 p-4 text-left">
+        <div className="mt-6 rounded-sm border border-border bg-muted p-4 text-left">
           <dl className="space-y-2.5 text-sm">
             <div className="flex justify-between">
               <dt className="text-muted-foreground">

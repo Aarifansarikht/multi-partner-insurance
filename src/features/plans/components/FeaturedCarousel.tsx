@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import type { Plan } from "@/types/plan";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlanCategoryIcon } from "./PlanCategoryIcon";
 import { calculatePremium } from "@/features/plans/premium";
@@ -84,7 +85,7 @@ export function FeaturedCarousel({ plans }: { plans: Plan[] }) {
                 "h-1.5 rounded-full transition-all duration-200",
                 i === selected
                   ? "w-6 bg-primary"
-                  : "w-1.5 bg-border hover:bg-muted-foreground/40",
+                  : "w-1.5 bg-border hover:bg-muted-foreground",
               )}
             />
           ))}
@@ -97,49 +98,48 @@ export function FeaturedCarousel({ plans }: { plans: Plan[] }) {
 function FeaturedSlide({ plan }: { plan: Plan }) {
   const quote = calculatePremium(plan, plan.coverDefault, plan.terms[0]);
   return (
-    <article className="min-w-0 flex-[0_0_92%] sm:flex-[0_0_70%] lg:flex-[0_0_48%]">
-      <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-sm border border-border bg-gradient-to-br from-primary to-secondary p-6 text-primary-foreground shadow-md">
-        <div
-          className="pointer-events-none absolute -right-12 -top-12 size-44 rounded-full bg-primary-foreground/10 blur-2xl"
-          aria-hidden
-        />
-        <div className="relative">
-          <div className="flex items-center gap-2">
-            <span className="flex size-9 items-center justify-center rounded-sm bg-primary-foreground/15">
-              <PlanCategoryIcon category={plan.category} className="size-5" />
-            </span>
-            <span className="text-2xs font-semibold uppercase tracking-widest text-primary-foreground/80">
-              {plan.category}
-            </span>
+    <article className="min-w-0 flex-[0_0_88%] sm:flex-[0_0_70%] lg:flex-[0_0_48%]">
+      <div className="flex h-full flex-col justify-between rounded-sm border border-border border-l-4 border-l-primary bg-surface p-5 shadow-md sm:p-6">
+        <div>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="flex size-9 items-center justify-center rounded-sm bg-primary-soft text-primary">
+                <PlanCategoryIcon category={plan.category} className="size-5" />
+              </span>
+              <span className="text-2xs font-semibold uppercase tracking-widest text-muted-foreground">
+                {plan.category}
+              </span>
+            </div>
+            {plan.popular && <Badge variant="accent">Popular</Badge>}
           </div>
-          <h3 className="mt-4 font-display text-2xl font-semibold leading-tight">
+          <h3 className="mt-4 font-display text-xl font-semibold leading-tight sm:text-2xl">
             {plan.name}
           </h3>
-          <p className="mt-2 max-w-md text-sm text-primary-foreground/85">
+          <p className="mt-2 max-w-md text-sm text-muted-foreground">
             {plan.tagline}
           </p>
-          <div className="mt-3 flex items-center gap-1.5 text-xs text-primary-foreground/85">
-            <Star className="size-3.5 fill-current" />
-            <span className="font-medium">{plan.rating}</span>
+          <div className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Star className="size-3.5 fill-warning text-warning" />
+            <span className="font-medium text-foreground">{plan.rating}</span>
             <span>·</span>
             <span>Cover up to {formatCompactCover(plan.coverMax)}</span>
           </div>
         </div>
 
-        <div className="relative mt-6 flex items-end justify-between gap-3">
+        <div className="mt-6 flex items-end justify-between gap-3">
           <div>
-            <p className="text-2xs uppercase tracking-wide text-primary-foreground/75">
+            <p className="text-2xs uppercase tracking-wide text-muted-foreground">
               Starting at
             </p>
             <p className="font-display text-2xl font-semibold">
               {formatCurrency(quote.totalPremium)}
-              <span className="text-sm font-normal text-primary-foreground/80">
+              <span className="text-sm font-normal text-muted-foreground">
                 {" "}
                 /yr
               </span>
             </p>
           </div>
-          <Button asChild variant="secondary" className="bg-background text-foreground hover:bg-background/90">
+          <Button asChild>
             <Link to={ROUTES.planDetail(plan.slug)}>
               View plan <ArrowRight className="size-4" />
             </Link>

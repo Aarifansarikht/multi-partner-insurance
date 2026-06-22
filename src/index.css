@@ -6,85 +6,98 @@
 @tailwind utilities;
 
 /**
- * Default token set.
+ * Default token set (flat hex).
  *
- * These values are the safe fallback brand (a neutral slate/indigo) used for
- * first paint. At runtime PartnerThemeProvider overwrites the brand + surface
- * tokens with the active partner's palette, and the `.dark` class swaps the
- * light/dark variant. shadcn's stock tokens are intentionally re-tuned here:
- * sharper radius, true semantic surface/success/warning, calmer borders.
+ * These are the fallback brand (Aegis) used for first paint. At runtime
+ * PartnerThemeProvider overwrites the brand + neutral tokens with the active
+ * partner's palette, and the `.dark` class swaps light/dark. Status colours
+ * (success / warning / destructive) are constant across partners and are NOT
+ * overwritten, so meaning stays consistent everywhere.
  */
 @layer base {
   :root {
     --radius: 0.25rem;
 
-    --background: 210 20% 98%;
-    --foreground: 222 32% 12%;
+    --background: #f7f9fc;
+    --foreground: #14213a;
 
-    --surface: 0 0% 100%;
-    --surface-foreground: 222 32% 12%;
+    --surface: #ffffff;
+    --surface-foreground: #14213a;
 
-    --muted: 214 20% 94%;
-    --muted-foreground: 218 14% 42%;
+    --muted: #eef1f6;
+    --muted-foreground: #5b6678;
 
-    --border: 214 20% 88%;
-    --input: 214 20% 86%;
-    --ring: 222 60% 50%;
+    --border: #dde3ec;
+    --input: #d3dae6;
+    --ring: #2647c9;
 
-    --primary: 222 60% 50%;
-    --primary-foreground: 0 0% 100%;
+    --primary: #2647c9;
+    --primary-foreground: #ffffff;
+    --primary-hover: #1f3aa8;
+    --primary-soft: #e7ecfb;
 
-    --secondary: 222 30% 22%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: #25304d;
+    --secondary-foreground: #ffffff;
+    --secondary-hover: #1b2540;
 
-    --accent: 199 89% 48%;
-    --accent-foreground: 0 0% 100%;
+    --accent: #0aa2e8;
+    --accent-foreground: #ffffff;
+    --accent-soft: #e2f3fc;
 
-    --success: 152 58% 38%;
-    --success-foreground: 0 0% 100%;
+    /* Status — constant across partners */
+    --success: #15915f;
+    --success-foreground: #ffffff;
+    --success-soft: #def2e9;
 
-    --warning: 38 92% 48%;
-    --warning-foreground: 38 92% 10%;
+    --warning: #c77a0a;
+    --warning-foreground: #ffffff;
+    --warning-soft: #fbeed4;
 
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --shadow-color: 222 47% 30%;
+    --destructive: #d23b3b;
+    --destructive-foreground: #ffffff;
+    --destructive-hover: #b32f2f;
+    --destructive-soft: #fbe3e3;
   }
 
   .dark {
-    --background: 222 30% 9%;
-    --foreground: 210 20% 96%;
+    --background: #0d1322;
+    --foreground: #e8edf6;
 
-    --surface: 222 26% 12%;
-    --surface-foreground: 210 20% 96%;
+    --surface: #141b2d;
+    --surface-foreground: #e8edf6;
 
-    --muted: 217 22% 18%;
-    --muted-foreground: 215 16% 64%;
+    --muted: #1e2740;
+    --muted-foreground: #93a0b8;
 
-    --border: 217 20% 22%;
-    --input: 217 20% 24%;
-    --ring: 222 70% 64%;
+    --border: #283149;
+    --input: #2d3750;
+    --ring: #5b78e6;
 
-    --primary: 222 70% 60%;
-    --primary-foreground: 222 47% 11%;
+    --primary: #5b78e6;
+    --primary-foreground: #0d1322;
+    --primary-hover: #738ceb;
+    --primary-soft: #1c2647;
 
-    --secondary: 210 20% 92%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: #d9e0f0;
+    --secondary-foreground: #0d1322;
+    --secondary-hover: #c4cee6;
 
-    --accent: 199 89% 56%;
-    --accent-foreground: 222 47% 11%;
+    --accent: #38b6f0;
+    --accent-foreground: #0d1322;
+    --accent-soft: #15314a;
 
-    --success: 152 52% 46%;
-    --success-foreground: 152 60% 8%;
+    --success: #34c47e;
+    --success-foreground: #07140f;
+    --success-soft: #123026;
 
-    --warning: 38 92% 56%;
-    --warning-foreground: 38 92% 10%;
+    --warning: #e0a13a;
+    --warning-foreground: #1a1206;
+    --warning-soft: #2e2310;
 
-    --destructive: 0 70% 58%;
-    --destructive-foreground: 0 0% 100%;
-
-    --shadow-color: 0 0% 0%;
+    --destructive: #e15b5b;
+    --destructive-foreground: #1a0808;
+    --destructive-hover: #ec7373;
+    --destructive-soft: #321616;
   }
 }
 
@@ -127,25 +140,12 @@
   }
 
   ::selection {
-    @apply bg-primary/20;
+    @apply bg-muted;
   }
 }
 
 @layer utilities {
-  /* Skeleton shimmer overlay — used by the Skeleton primitive. */
-  .skeleton-shimmer::after {
-    content: "";
-    @apply absolute inset-0 -translate-x-full;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      hsl(var(--foreground) / 0.06),
-      transparent
-    );
-    @apply animate-shimmer;
-  }
-
-  /* Hide scrollbar while keeping scroll (used by the featured carousel). */
+  /* Hide scrollbar while keeping scroll (used by carousels / chip rows). */
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
