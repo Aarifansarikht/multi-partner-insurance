@@ -96,7 +96,6 @@ export default function KycPage() {
                 onChange={field.onChange}
                 onBlur={field.onBlur}
                 invalid={!!errors.dateOfBirth}
-                placeholder="Select date of birth"
                 fromYear={CURRENT_YEAR - 100}
                 toYear={CURRENT_YEAR}
               />

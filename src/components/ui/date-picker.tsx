@@ -1,32 +1,33 @@
-import * as React from "react";
-import { CalendarIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-/** ISO (yyyy-mm-dd) <-> local Date helpers, TZ-safe (no UTC shifting). */
-function toISO(date: Date): string {
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-}
-function fromISO(value?: string): Date | undefined {
-  if (!value) return undefined;
-  const [y, m, d] = value.split("-").map(Number);
-  if (!y || !m || !d) return undefined;
-  return new Date(y, m - 1, d);
-}
-function formatDisplay(date: Date): string {
-  return date.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
+/**
+ * Simple, dependency-free date picker: three Day / Month / Year dropdowns.
+ *
+ * Chosen over a calendar grid because it's the fastest, most reliable way to
+ * enter a date of birth (jump straight to a year instead of paging months) and
+ * has no rendering edge cases. Emits an ISO `yyyy-mm-dd` string once all three
+ * parts are chosen (and `""` while incomplete, so validation still fires).
+ */
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export interface DatePickerProps {
   id?: string;
@@ -34,88 +35,129 @@ export interface DatePickerProps {
   value?: string;
   onChange: (value: string) => void;
   onBlur?: () => void;
-  placeholder?: string;
   invalid?: boolean;
   disabled?: boolean;
-  /** Earliest selectable year (enables month/year dropdowns). */
+  /** Earliest selectable year. */
   fromYear?: number;
-  /** Latest selectable year (enables month/year dropdowns). */
+  /** Latest selectable year. */
   toYear?: number;
-  /** Disable dates after today (default true — birth dates can't be future). */
-  disableFuture?: boolean;
 }
 
-/**
- * shadcn-style date picker: a Popover-triggered calendar. When `fromYear`/
- * `toYear` are provided it shows month + year dropdowns, making date-of-birth
- * entry quick instead of stepping month by month.
- */
+interface Parts {
+  d: string;
+  m: string;
+  y: string;
+}
+
+function parse(value?: string): Parts {
+  if (!value) return { d: "", m: "", y: "" };
+  const [y, m, d] = value.split("-");
+  return {
+    y: y ?? "",
+    m: m ? String(Number(m)) : "",
+    d: d ? String(Number(d)) : "",
+  };
+}
+
+const daysInMonth = (year: number, month: number) =>
+  new Date(year, month, 0).getDate();
+
 export function DatePicker({
   id,
   value,
   onChange,
   onBlur,
-  placeholder = "Select a date",
   invalid,
   disabled,
   fromYear,
   toYear,
-  disableFuture = true,
 }: DatePickerProps) {
-  const [open, setOpen] = React.useState(false);
-  const selected = fromISO(value);
+  const current = parse(value);
+  const maxYear = toYear ?? new Date().getFullYear();
+  const minYear = fromYear ?? maxYear - 100;
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const years: number[] = [];
+  for (let y = maxYear; y >= minYear; y--) years.push(y);
 
-  const hasRange = fromYear !== undefined || toYear !== undefined;
-  const defaultMonth =
-    selected ?? (toYear ? new Date(toYear - 25, 0) : undefined);
+  const dayCount =
+    current.y && current.m
+      ? daysInMonth(Number(current.y), Number(current.m))
+      : 31;
+  const days = Array.from({ length: dayCount }, (_, i) => i + 1);
+
+  const emit = (next: Partial<Parts>) => {
+    const d = next.d ?? current.d;
+    const m = next.m ?? current.m;
+    const y = next.y ?? current.y;
+    if (d && m && y) {
+      // Clamp the day to the chosen month/year (e.g. 31 -> 28 for February).
+      const dd = Math.min(Number(d), daysInMonth(Number(y), Number(m)));
+      onChange(
+        `${y}-${String(Number(m)).padStart(2, "0")}-${String(dd).padStart(2, "0")}`,
+      );
+    } else {
+      onChange("");
+    }
+    onBlur?.();
+  };
 
   return (
-    <Popover
-      open={open}
-      onOpenChange={(next) => {
-        setOpen(next);
-        if (!next) onBlur?.();
-      }}
+    <div
+      id={id}
+      className="grid grid-cols-[1fr_1.3fr_1fr] gap-2"
+      role="group"
+      aria-label="Date of birth"
     >
-      <PopoverTrigger asChild>
-        <Button
-          id={id}
-          type="button"
-          variant="outline"
-          disabled={disabled}
-          aria-invalid={invalid || undefined}
-          className={cn(
-            "w-full justify-start gap-2 font-normal",
-            !selected && "text-muted-foreground",
-            invalid &&
-              "border-destructive focus-visible:ring-destructive",
-          )}
-        >
-          <CalendarIcon className="size-4 opacity-70" />
-          {selected ? formatDisplay(selected) : placeholder}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={selected}
-          defaultMonth={defaultMonth}
-          captionLayout={hasRange ? "dropdown" : "label"}
-          startMonth={fromYear ? new Date(fromYear, 0) : undefined}
-          endMonth={toYear ? new Date(toYear, 11) : undefined}
-          disabled={disableFuture ? { after: today } : undefined}
-          onSelect={(date) => {
-            if (date) {
-              onChange(toISO(date));
-              setOpen(false);
-            }
-          }}
-          autoFocus
-        />
-      </PopoverContent>
-    </Popover>
+      <Select
+        value={current.d}
+        onValueChange={(v) => emit({ d: v })}
+        disabled={disabled}
+      >
+        <SelectTrigger aria-label="Day" aria-invalid={invalid || undefined}>
+          <SelectValue placeholder="Day" />
+        </SelectTrigger>
+        <SelectContent className="max-h-60">
+          {days.map((d) => (
+            <SelectItem key={d} value={String(d)}>
+              {d}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={current.m}
+        onValueChange={(v) => emit({ m: v })}
+        disabled={disabled}
+      >
+        <SelectTrigger aria-label="Month" aria-invalid={invalid || undefined}>
+          <SelectValue placeholder="Month" />
+        </SelectTrigger>
+        <SelectContent className="max-h-60">
+          {MONTHS.map((name, i) => (
+            <SelectItem key={name} value={String(i + 1)}>
+              {name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={current.y}
+        onValueChange={(v) => emit({ y: v })}
+        disabled={disabled}
+      >
+        <SelectTrigger aria-label="Year" aria-invalid={invalid || undefined}>
+          <SelectValue placeholder="Year" />
+        </SelectTrigger>
+        <SelectContent className="max-h-60">
+          {years.map((y) => (
+            <SelectItem key={y} value={String(y)}>
+              {y}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }
