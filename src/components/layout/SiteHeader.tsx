@@ -3,14 +3,17 @@ import { ROUTES } from "@/lib/routes";
 import { useActivePartner } from "@/features/partner/selectors";
 import { PartnerSwitcher } from "@/features/partner/components/PartnerSwitcher";
 import { ThemeToggle } from "@/features/theme/ThemeToggle";
+import { useAuth } from "@/features/auth/selectors";
+import { UserMenu } from "@/features/auth/components/UserMenu";
+import { Button } from "@/components/ui/button";
 
 /**
  * Application header. The brand block reflects the active partner; the action
- * slot carries the partner switcher and theme toggle (account menu is added
- * with auth).
+ * slot carries the partner switcher, theme toggle and account/login control.
  */
 export function SiteHeader() {
   const partner = useActivePartner();
+  const { isAuthenticated } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/65">
@@ -36,6 +39,13 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <PartnerSwitcher />
           <ThemeToggle />
+          {isAuthenticated ? (
+            <UserMenu />
+          ) : (
+            <Button asChild variant="outline" className="hidden sm:inline-flex">
+              <Link to={ROUTES.login}>Log in</Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

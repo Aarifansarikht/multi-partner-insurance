@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { RootLayout } from "@/components/layout/RootLayout";
 import { NotFound } from "@/components/NotFound";
+import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
 import { JourneyLayout } from "@/features/journey/JourneyLayout";
 import PlansPage from "@/features/plans/pages/PlansPage";
 import PlanDetailPage from "@/features/plans/pages/PlanDetailPage";
@@ -30,15 +31,18 @@ function App() {
         <Route path="plans/:planId" element={<PlanDetailPage />} />
         <Route path="login" element={<LoginPage />} />
 
-        <Route path="journey" element={<JourneyLayout />}>
-          <Route index element={<Navigate to="kyc" replace />} />
-          <Route path="kyc" element={<KycPage />} />
-          <Route path="personal" element={<PersonalDetailsPage />} />
-          <Route path="nominee" element={<NomineePage />} />
-          <Route path="review" element={<ReviewPage />} />
-          <Route path="payment" element={<PaymentPage />} />
+        {/* Everything from here on is gated behind authentication. */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="journey" element={<JourneyLayout />}>
+            <Route index element={<Navigate to="kyc" replace />} />
+            <Route path="kyc" element={<KycPage />} />
+            <Route path="personal" element={<PersonalDetailsPage />} />
+            <Route path="nominee" element={<NomineePage />} />
+            <Route path="review" element={<ReviewPage />} />
+            <Route path="payment" element={<PaymentPage />} />
+          </Route>
+          <Route path="journey/result" element={<ResultPage />} />
         </Route>
-        <Route path="journey/result" element={<ResultPage />} />
 
         <Route path="*" element={<NotFound />} />
       </Route>

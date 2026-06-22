@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { PremiumQuote } from "@/types/plan";
 import { usePlan } from "@/features/plans/hooks";
+import { useAuth } from "@/features/auth/selectors";
 import { PlanConfigurator } from "@/features/plans/components/PlanConfigurator";
 import { PlanCategoryIcon } from "@/features/plans/components/PlanCategoryIcon";
 import { PlanDetailSkeleton } from "@/features/plans/components/PlanDetailSkeleton";
@@ -22,6 +23,7 @@ import { ROUTES } from "@/lib/routes";
 export default function PlanDetailPage() {
   const { planId } = useParams();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const { status, data: plan, error, refetch } = usePlan(planId);
 
   if (status === "loading") return <PlanDetailSkeleton />;
@@ -51,10 +53,15 @@ export default function PlanDetailPage() {
 
   if (!plan) return null;
 
-  // Begin the purchase. The configurator passes the exact quote; access control
-  // and journey state are layered on in later milestones.
+  // Begin the purchase. If the user isn't logged in, send them to login with a
+  // redirect back into the journey so they resume exactly here. (Capturing the
+  // chosen quote into journey state is added with the journey slice.)
   const handleBuy = (_quote: PremiumQuote) => {
-    navigate(ROUTES.login);
+    if (isAuthenticated) {
+      navigate(ROUTES.kyc);
+    } else {
+      navigate(`${ROUTES.login}?redirect=${encodeURIComponent(ROUTES.kyc)}`);
+    }
   };
 
   return (
