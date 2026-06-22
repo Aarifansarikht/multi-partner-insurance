@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { readPersisted } from "@/store/persistence";
 import type {
   JourneySelection,
   KycData,
@@ -25,9 +26,14 @@ export const emptyJourney: JourneyState = {
   payment: null,
 };
 
+/** Rehydrate an in-progress journey so a mid-flow refresh resumes seamlessly. */
+export function getInitialJourneyState(): JourneyState {
+  return readPersisted<JourneyState>("journey") ?? emptyJourney;
+}
+
 const journeySlice = createSlice({
   name: "journey",
-  initialState: emptyJourney,
+  initialState: getInitialJourneyState(),
   reducers: {
     /**
      * Begin a purchase. Always starts from a clean slate so a new journey never

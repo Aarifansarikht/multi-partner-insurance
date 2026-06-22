@@ -25,6 +25,7 @@ const persistSpecs: PersistSpec<RootState>[] = [
   { key: "partner", select: (s) => s.partner },
   { key: "theme", select: (s) => s.theme },
   { key: "auth", select: (s) => s.auth },
+  { key: "journey", select: (s) => s.journey },
 ];
 
 export const store = configureStore({

@@ -1,19 +1,28 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { CheckCircle2, Home, RefreshCw, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useAppDispatch } from "@/store/hooks";
 import { useJourney } from "@/features/journey/selectors";
+import { resetJourney } from "@/features/journey/journeySlice";
 import { formatCompactCover, formatCurrency } from "@/lib/format";
 import { ROUTES } from "@/lib/routes";
 
 export default function ResultPage() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { selection, payment } = useJourney();
 
   // Nothing to show without a payment attempt — send the user back to review.
   if (!payment || !selection) return <Navigate to={ROUTES.home} replace />;
 
   const success = payment.status === "success";
+
+  // Leaving a completed purchase wipes the journey so the next one is clean.
+  const finishAndReset = () => {
+    dispatch(resetJourney());
+    navigate(ROUTES.home);
+  };
 
   return (
     <div className="container max-w-xl py-12 md:py-16">
@@ -75,18 +84,16 @@ export default function ResultPage() {
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
           {success ? (
-            <Button asChild size="lg">
-              <Link to={ROUTES.home}>
-                <Home className="size-4" /> Back to home
-              </Link>
+            <Button size="lg" onClick={finishAndReset}>
+              <Home className="size-4" /> Back to home
             </Button>
           ) : (
             <>
               <Button size="lg" onClick={() => navigate(ROUTES.payment)}>
                 <RefreshCw className="size-4" /> Retry payment
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to={ROUTES.home}>Back to home</Link>
+              <Button size="lg" variant="outline" onClick={finishAndReset}>
+                Back to home
               </Button>
             </>
           )}

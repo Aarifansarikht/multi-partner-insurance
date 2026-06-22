@@ -11,6 +11,7 @@ import {
 import { useAppDispatch } from "@/store/hooks";
 import { useAuth } from "@/features/auth/selectors";
 import { clearSession } from "@/features/auth/authSlice";
+import { resetJourney } from "@/features/journey/journeySlice";
 import { ROUTES } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
@@ -22,7 +23,9 @@ export function UserMenu() {
   if (!user) return null;
 
   const handleLogout = () => {
+    // Logging out clears the session AND any in-progress purchase data.
     dispatch(clearSession());
+    dispatch(resetJourney());
     navigate(ROUTES.home);
   };
 

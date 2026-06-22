@@ -1,19 +1,27 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/feedback/EmptyState";
-import { ROUTES } from "@/lib/routes";
+import { JOURNEY_STEPS, ROUTES } from "@/lib/routes";
 import { useJourney } from "@/features/journey/selectors";
+import { firstIncompleteStep, isStepUnlocked } from "@/features/journey/progress";
 import { JourneyStepper } from "./components/JourneyStepper";
 import { JourneySummary } from "./components/JourneySummary";
 
 /**
- * Frame shared by every journey step: progress stepper, the routed step form,
- * and a persistent selection summary. If there is no active selection (e.g. a
- * user deep-links into a step without starting a purchase) we guide them back to
- * the catalog rather than render a broken, empty journey.
+ * Frame + guard for the journey.
+ *
+ * Guards, in order:
+ * 1. No selection -> guide back to the catalog (nothing to apply for).
+ * 2. Purchase already completed -> jump to the result screen.
+ * 3. Jumping ahead to a locked step -> redirect to the first incomplete step.
+ *
+ * Combined with persisted journey state, this makes a mid-flow refresh or a deep
+ * link land the user on a valid step with their entered data restored.
  */
 export function JourneyLayout() {
-  const { selection } = useJourney();
+  const { pathname } = useLocation();
+  const journey = useJourney();
+  const { selection, payment } = journey;
 
   if (!selection) {
     return (
@@ -29,6 +37,20 @@ export function JourneyLayout() {
         />
       </div>
     );
+  }
+
+  if (payment?.status === "success") {
+    return <Navigate to={ROUTES.result} replace />;
+  }
+
+  const currentStep = JOURNEY_STEPS.find((s) => pathname.startsWith(s.path));
+  if (currentStep && !isStepUnlocked(journey, currentStep.id)) {
+    const target = JOURNEY_STEPS.find(
+      (s) => s.id === firstIncompleteStep(journey),
+    );
+    if (target && target.path !== currentStep.path) {
+      return <Navigate to={target.path} replace />;
+    }
   }
 
   return (
