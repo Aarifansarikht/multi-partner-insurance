@@ -1,0 +1,156 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/sora";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Default token set.
+ *
+ * These values are the safe fallback brand (a neutral slate/indigo) used for
+ * first paint. At runtime PartnerThemeProvider overwrites the brand + surface
+ * tokens with the active partner's palette, and the `.dark` class swaps the
+ * light/dark variant. shadcn's stock tokens are intentionally re-tuned here:
+ * sharper radius, true semantic surface/success/warning, calmer borders.
+ */
+@layer base {
+  :root {
+    --radius: 0.25rem;
+
+    --background: 210 20% 98%;
+    --foreground: 222 32% 12%;
+
+    --surface: 0 0% 100%;
+    --surface-foreground: 222 32% 12%;
+
+    --muted: 214 20% 94%;
+    --muted-foreground: 218 14% 42%;
+
+    --border: 214 20% 88%;
+    --input: 214 20% 86%;
+    --ring: 222 60% 50%;
+
+    --primary: 222 60% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 222 30% 22%;
+    --secondary-foreground: 0 0% 100%;
+
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 152 58% 38%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 48%;
+    --warning-foreground: 38 92% 10%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --shadow-color: 222 47% 30%;
+  }
+
+  .dark {
+    --background: 222 30% 9%;
+    --foreground: 210 20% 96%;
+
+    --surface: 222 26% 12%;
+    --surface-foreground: 210 20% 96%;
+
+    --muted: 217 22% 18%;
+    --muted-foreground: 215 16% 64%;
+
+    --border: 217 20% 22%;
+    --input: 217 20% 24%;
+    --ring: 222 70% 64%;
+
+    --primary: 222 70% 60%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 210 20% 92%;
+    --secondary-foreground: 222 47% 11%;
+
+    --accent: 199 89% 56%;
+    --accent-foreground: 222 47% 11%;
+
+    --success: 152 52% 46%;
+    --success-foreground: 152 60% 8%;
+
+    --warning: 38 92% 56%;
+    --warning-foreground: 38 92% 10%;
+
+    --destructive: 0 70% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --shadow-color: 0 0% 0%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight;
+  }
+
+  /* Visible, on-brand focus ring for keyboard users only. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Respect reduced-motion preferences. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  ::selection {
+    @apply bg-primary/20;
+  }
+}
+
+@layer utilities {
+  /* Skeleton shimmer overlay — used by the Skeleton primitive. */
+  .skeleton-shimmer::after {
+    content: "";
+    @apply absolute inset-0 -translate-x-full;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--foreground) / 0.06),
+      transparent
+    );
+    @apply animate-shimmer;
+  }
+
+  /* Hide scrollbar while keeping scroll (used by the featured carousel). */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
