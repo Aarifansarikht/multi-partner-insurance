@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -23,8 +23,7 @@ function Calendar({
       classNames={{
         months: "relative flex flex-col gap-4 sm:flex-row",
         month: "flex w-full flex-col gap-4",
-        month_caption: "relative flex h-9 items-center justify-center px-9",
-        caption_label: "text-sm font-medium",
+        month_caption: "relative flex h-8 items-center justify-center px-9",
         nav: "absolute inset-x-0 top-0 flex items-center justify-between",
         button_previous: cn(
           buttonVariants({ variant: "outline", size: "icon" }),
@@ -34,10 +33,15 @@ function Calendar({
           buttonVariants({ variant: "outline", size: "icon" }),
           "size-8",
         ),
-        dropdowns: "flex items-center justify-center gap-1.5",
-        dropdown_root: "relative",
+        // Month + year dropdown selects. The native <select> is laid over the
+        // visible label transparently so only one label shows and the whole
+        // pill stays clickable.
+        dropdowns: "flex items-center justify-center gap-2",
+        dropdown_root:
+          "relative inline-flex h-8 items-center gap-1 rounded-sm border border-input bg-surface pl-2.5 pr-1.5 text-sm font-medium",
         dropdown:
-          "rounded-sm border border-input bg-surface px-2 py-1 text-sm font-medium",
+          "absolute inset-0 z-10 cursor-pointer appearance-none bg-transparent text-transparent opacity-0",
+        caption_label: "flex items-center gap-1 text-sm font-medium",
         month_grid: "w-full border-collapse",
         weekdays: "flex",
         weekday:
@@ -57,12 +61,12 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        Chevron: ({ orientation, className: chevronClass }) =>
-          orientation === "left" ? (
-            <ChevronLeft className={cn("size-4", chevronClass)} />
-          ) : (
-            <ChevronRight className={cn("size-4", chevronClass)} />
-          ),
+        Chevron: ({ orientation, className: chevronClass }) => {
+          const cls = cn("size-4", chevronClass);
+          if (orientation === "left") return <ChevronLeft className={cls} />;
+          if (orientation === "right") return <ChevronRight className={cls} />;
+          return <ChevronDown className={cls} />;
+        },
       }}
       {...props}
     />
