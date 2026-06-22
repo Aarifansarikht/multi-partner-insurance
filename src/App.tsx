@@ -1,57 +1,48 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ShieldCheck } from "lucide-react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { RootLayout } from "@/components/layout/RootLayout";
+import { NotFound } from "@/components/NotFound";
+import { JourneyLayout } from "@/features/journey/JourneyLayout";
+import PlansPage from "@/features/plans/pages/PlansPage";
+import PlanDetailPage from "@/features/plans/pages/PlanDetailPage";
+import LoginPage from "@/features/auth/pages/LoginPage";
+import KycPage from "@/features/journey/pages/KycPage";
+import PersonalDetailsPage from "@/features/journey/pages/PersonalDetailsPage";
+import NomineePage from "@/features/journey/pages/NomineePage";
+import ReviewPage from "@/features/journey/pages/ReviewPage";
+import PaymentPage from "@/features/journey/pages/PaymentPage";
+import ResultPage from "@/features/journey/pages/ResultPage";
 
 /**
- * Commit 1 placeholder: a small design-system smoke screen that proves the
- * token pipeline (Tailwind config -> CSS variables -> semantic utilities)
- * renders before any feature code is layered on top. Replaced by the router
- * in the next stage.
+ * Route tree.
+ *
+ * - `/` and `/plans/:planId` are public browsing pages.
+ * - `/login` is the entry to the protected flow.
+ * - `/journey/*` (kyc -> payment) shares the stepper layout; access control and
+ *   the step guard are layered onto these routes in later milestones.
+ * - `/journey/result` deliberately sits outside the stepper layout so the
+ *   success/failure screen renders full-width without a progress bar.
  */
 function App() {
   return (
-    <div className="min-h-dvh">
-      <div className="container flex max-w-3xl flex-col gap-8 py-16">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary text-primary-foreground">
-            <ShieldCheck className="size-5" />
-          </div>
-          <div>
-            <p className="text-2xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Multi-Partner Insurance
-            </p>
-            <h1 className="text-2xl font-bold">Onboarding</h1>
-          </div>
-        </div>
+    <Routes>
+      <Route element={<RootLayout />}>
+        <Route index element={<PlansPage />} />
+        <Route path="plans/:planId" element={<PlanDetailPage />} />
+        <Route path="login" element={<LoginPage />} />
 
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Design system online</CardTitle>
-              <Badge variant="success">Ready</Badge>
-            </div>
-            <CardDescription>
-              Semantic tokens are wired through the Tailwind theme and resolve to
-              CSS custom properties, ready for partner theming.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-3">
-            <Button>Primary</Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-            <Button variant="destructive">Destructive</Button>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+        <Route path="journey" element={<JourneyLayout />}>
+          <Route index element={<Navigate to="kyc" replace />} />
+          <Route path="kyc" element={<KycPage />} />
+          <Route path="personal" element={<PersonalDetailsPage />} />
+          <Route path="nominee" element={<NomineePage />} />
+          <Route path="review" element={<ReviewPage />} />
+          <Route path="payment" element={<PaymentPage />} />
+        </Route>
+        <Route path="journey/result" element={<ResultPage />} />
+
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 }
 
