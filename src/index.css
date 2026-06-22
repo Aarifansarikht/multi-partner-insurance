@@ -154,3 +154,55 @@
     display: none;
   }
 }
+
+/**
+ * react-day-picker theming.
+ *
+ * The library ships its own layout CSS (imported in calendar.tsx); here we only
+ * map its colour variables to our semantic tokens and override a few rules
+ * (scoped with `.rdp-root` for specificity) so the selected day is a filled
+ * primary swatch and everything follows the active partner + dark mode.
+ */
+.rdp-root {
+  --rdp-accent-color: var(--primary);
+  --rdp-accent-background-color: var(--primary-soft);
+  --rdp-day_button-border-radius: 0.25rem;
+  --rdp-selected-border: none;
+  font-family: inherit;
+  font-size: 0.875rem;
+  margin: 0;
+}
+.rdp-root .rdp-day_button {
+  border-radius: 0.25rem;
+}
+.rdp-root .rdp-day_button:hover {
+  background-color: var(--muted);
+}
+.rdp-root .rdp-selected .rdp-day_button {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+}
+.rdp-root .rdp-today:not(.rdp-selected) .rdp-day_button {
+  color: var(--primary);
+  font-weight: 600;
+}
+.rdp-root .rdp-disabled {
+  opacity: 0.4;
+}
+.rdp-root .rdp-chevron {
+  fill: var(--foreground);
+}
+.rdp-root .rdp-caption_label,
+.rdp-root .rdp-dropdown {
+  color: var(--foreground);
+}
+.rdp-root .rdp-dropdown {
+  background-color: var(--surface);
+}
+.rdp-root .rdp-weekday {
+  color: var(--muted-foreground);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+}
