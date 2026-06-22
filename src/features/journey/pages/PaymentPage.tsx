@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CreditCard, Info, Loader2, Lock, ShieldCheck } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { StepHeader, StepActions } from "@/features/journey/components/StepShell";
 import { useAppDispatch } from "@/store/hooks";
@@ -34,6 +35,11 @@ export default function PaymentPage() {
 
   const finish = (result: PaymentResult) => {
     dispatch(setPayment(result));
+    if (result.status === "success") {
+      toast.success("Payment successful");
+    } else {
+      toast.error("Payment failed");
+    }
     navigate(ROUTES.result);
   };
 

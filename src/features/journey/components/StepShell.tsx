@@ -1,8 +1,12 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-/** Heading block shared by every journey step. */
+/**
+ * Heading block shared by every journey step. Moves keyboard/screen-reader focus
+ * to the step title on mount so navigating between steps announces the new step
+ * and lands focus in the right place.
+ */
 export function StepHeader({
   title,
   description,
@@ -10,9 +14,20 @@ export function StepHeader({
   title: string;
   description?: string;
 }) {
+  const ref = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    ref.current?.focus();
+  }, []);
+
   return (
     <header className="mb-6">
-      <h1 className="font-display text-2xl font-bold tracking-tight">{title}</h1>
+      <h1
+        ref={ref}
+        tabIndex={-1}
+        className="font-display text-2xl font-bold tracking-tight outline-none"
+      >
+        {title}
+      </h1>
       {description && (
         <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       )}

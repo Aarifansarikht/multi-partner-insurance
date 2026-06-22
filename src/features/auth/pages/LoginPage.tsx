@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ArrowLeft, Loader2, Lock, Smartphone } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -72,6 +73,7 @@ export default function LoginPage() {
     try {
       const session = await verifyOtp(mobile, otp);
       dispatch(setSession(session));
+      toast.success("Logged in successfully");
       navigate(redirect, { replace: true });
     } catch (err) {
       setFormError(err instanceof Error ? err.message : "Something went wrong");

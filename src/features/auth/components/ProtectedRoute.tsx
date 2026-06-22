@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useAuth } from "@/features/auth/selectors";
 import { clearSession } from "@/features/auth/authSlice";
@@ -20,7 +21,10 @@ export function ProtectedRoute() {
   const location = useLocation();
 
   useEffect(() => {
-    if (hasToken && !isAuthenticated) dispatch(clearSession());
+    if (hasToken && !isAuthenticated) {
+      dispatch(clearSession());
+      toast.error("Your session expired. Please log in again.");
+    }
   }, [hasToken, isAuthenticated, dispatch]);
 
   if (!isAuthenticated) {
