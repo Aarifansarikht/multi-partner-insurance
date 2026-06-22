@@ -10,6 +10,8 @@ import {
 import type { PremiumQuote } from "@/types/plan";
 import { usePlan } from "@/features/plans/hooks";
 import { useAuth } from "@/features/auth/selectors";
+import { useAppDispatch } from "@/store/hooks";
+import { startJourney } from "@/features/journey/journeySlice";
 import { PlanConfigurator } from "@/features/plans/components/PlanConfigurator";
 import { PlanCategoryIcon } from "@/features/plans/components/PlanCategoryIcon";
 import { PlanDetailSkeleton } from "@/features/plans/components/PlanDetailSkeleton";
@@ -23,6 +25,7 @@ import { ROUTES } from "@/lib/routes";
 export default function PlanDetailPage() {
   const { planId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuth();
   const { status, data: plan, error, refetch } = usePlan(planId);
 
@@ -53,10 +56,19 @@ export default function PlanDetailPage() {
 
   if (!plan) return null;
 
-  // Begin the purchase. If the user isn't logged in, send them to login with a
-  // redirect back into the journey so they resume exactly here. (Capturing the
-  // chosen quote into journey state is added with the journey slice.)
-  const handleBuy = (_quote: PremiumQuote) => {
+  // Begin the purchase: snapshot the chosen plan + quote into the journey
+  // (fresh slate), then continue to KYC — routing through login first if needed,
+  // so the user resumes the exact same purchase after authenticating.
+  const handleBuy = (quote: PremiumQuote) => {
+    dispatch(
+      startJourney({
+        planId: plan.id,
+        planSlug: plan.slug,
+        planName: plan.name,
+        category: plan.category,
+        quote,
+      }),
+    );
     if (isAuthenticated) {
       navigate(ROUTES.kyc);
     } else {

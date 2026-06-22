@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import partnerReducer from "@/features/partner/partnerSlice";
 import themeReducer from "@/features/theme/themeSlice";
 import authReducer from "@/features/auth/authSlice";
+import journeyReducer from "@/features/journey/journeySlice";
 import { createPersistMiddleware, type PersistSpec } from "./persistence";
 
 const rootReducer = {
   partner: partnerReducer,
   theme: themeReducer,
   auth: authReducer,
+  journey: journeyReducer,
 };
 
 // Pre-derive the type so persistence specs are fully typed against the store.
