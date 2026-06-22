@@ -75,7 +75,11 @@ export default function PaymentPage() {
         key: razorpayKey!,
         amount: order.amount,
         currency: order.currency,
-        order_id: order.orderId,
+        // NOTE: no `order_id` is sent. A real order_id must be created by a
+        // backend via Razorpay's Orders API; passing a client-generated id makes
+        // Checkout fail with "something went wrong". Without a backend we use the
+        // "payment without order" test flow (amount + key), which works with
+        // test cards. The mock order id is kept only for our own reference.
         name: partner.name,
         description: `${selection.planName} — annual premium`,
         prefill: {
@@ -83,7 +87,7 @@ export default function PaymentPage() {
           email: personal?.email,
           contact: user?.mobile,
         },
-        notes: { plan: selection.planId },
+        notes: { plan: selection.planId, ref: order.orderId },
         theme: { color: readTokenAsHex("--primary") },
         handler: (res) => {
           setProcessing(false);

@@ -16,10 +16,11 @@ export function getInitialThemeState(): ThemeState {
   if (persisted?.mode === "light" || persisted?.mode === "dark") {
     return { mode: persisted.mode };
   }
-  const prefersDark =
-    typeof window !== "undefined" &&
-    window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-  return { mode: prefersDark ? "dark" : "light" };
+  // const prefersDark =
+  //   typeof window !== "undefined" &&
+  //   window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+  // return { mode: prefersDark ? "dark" : "light" };
+  return { mode: "light" };
 }
 
 const themeSlice = createSlice({
