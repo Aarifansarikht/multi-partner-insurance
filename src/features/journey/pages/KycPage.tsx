@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Field } from "@/components/form/Field";
 import { StepHeader, StepActions } from "@/features/journey/components/StepShell";
 import { useAppDispatch } from "@/store/hooks";
@@ -9,6 +10,8 @@ import { useJourney } from "@/features/journey/selectors";
 import { saveKyc } from "@/features/journey/journeySlice";
 import { kycSchema, type KycInput } from "@/features/journey/schemas";
 import { ROUTES } from "@/lib/routes";
+
+const CURRENT_YEAR = new Date().getFullYear();
 
 export default function KycPage() {
   const navigate = useNavigate();
@@ -18,6 +21,7 @@ export default function KycPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<KycInput>({
     resolver: zodResolver(kycSchema),
@@ -82,13 +86,21 @@ export default function KycPage() {
           required
           error={errors.dateOfBirth?.message}
         >
-          <Input
-            id="dateOfBirth"
-            type="date"
-            max={new Date().toISOString().slice(0, 10)}
-            invalid={!!errors.dateOfBirth}
-            aria-describedby="dateOfBirth-error"
-            {...register("dateOfBirth")}
+          <Controller
+            control={control}
+            name="dateOfBirth"
+            render={({ field }) => (
+              <DatePicker
+                id="dateOfBirth"
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                invalid={!!errors.dateOfBirth}
+                placeholder="Select date of birth"
+                fromYear={CURRENT_YEAR - 100}
+                toYear={CURRENT_YEAR}
+              />
+            )}
           />
         </Field>
       </div>

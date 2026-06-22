@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Select,
   SelectContent,
@@ -17,6 +18,8 @@ import { saveNominee } from "@/features/journey/journeySlice";
 import { nomineeSchema, type NomineeInput } from "@/features/journey/schemas";
 import { RELATION_OPTIONS } from "@/features/journey/constants";
 import { ROUTES } from "@/lib/routes";
+
+const CURRENT_YEAR = new Date().getFullYear();
 
 export default function NomineePage() {
   const navigate = useNavigate();
@@ -101,13 +104,21 @@ export default function NomineePage() {
             required
             error={errors.dateOfBirth?.message}
           >
-            <Input
-              id="nomineeDob"
-              type="date"
-              max={new Date().toISOString().slice(0, 10)}
-              invalid={!!errors.dateOfBirth}
-              aria-describedby="nomineeDob-error"
-              {...register("dateOfBirth")}
+            <Controller
+              control={control}
+              name="dateOfBirth"
+              render={({ field }) => (
+                <DatePicker
+                  id="nomineeDob"
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  invalid={!!errors.dateOfBirth}
+                  placeholder="Select date of birth"
+                  fromYear={CURRENT_YEAR - 100}
+                  toYear={CURRENT_YEAR}
+                />
+              )}
             />
           </Field>
 
