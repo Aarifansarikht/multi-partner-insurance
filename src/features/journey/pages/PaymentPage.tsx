@@ -148,13 +148,12 @@ export default function PaymentPage() {
         <Info className="size-4 shrink-0 text-primary" />
         {isRazorpayConfigured ? (
           <p>
-            Razorpay test mode. Use card{" "}
-            <span className="font-medium text-foreground">
-              4111 1111 1111 1111
-            </span>
-            , any future expiry &amp; CVV, or UPI id{" "}
-            <span className="font-medium text-foreground">success@razorpay</span>
-            . No real money is charged.
+            Razorpay test mode — no real money is charged. Easiest: choose{" "}
+            <span className="font-medium text-foreground">UPI</span> and enter{" "}
+            <span className="font-medium text-foreground">success@razorpay</span>{" "}
+            (use <span className="font-medium text-foreground">failure@razorpay</span>{" "}
+            to test failure). Test cards may show “international cards not
+            supported” unless International payments are enabled on the account.
           </p>
         ) : (
           <p>
