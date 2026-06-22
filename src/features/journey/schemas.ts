@@ -54,11 +54,12 @@ export const nomineeSchema = z.object({
     .min(1, "Date of birth is required")
     .refine((v) => !Number.isNaN(Date.parse(v)), "Enter a valid date")
     .refine((v) => new Date(v) <= new Date(), "Date cannot be in the future"),
-  sharePercentage: z.coerce
+  sharePercentage: z
     .number({ message: "Enter a share %" })
-    .int("Use a whole number")
-    .min(1, "Share must be at least 1%")
-    .max(100, "Share cannot exceed 100%"),
+    .refine((v) => !Number.isNaN(v), "Enter a share %")
+    .refine((v) => Number.isInteger(v), "Use a whole number")
+    .refine((v) => v >= 1, "Share must be at least 1%")
+    .refine((v) => v <= 100, "Share cannot exceed 100%"),
 });
 
 export type KycInput = z.infer<typeof kycSchema>;
