@@ -52,8 +52,7 @@ export default function PlansPage() {
 
   const featured = useFeaturedPlans();
   const plans = usePlans({ query: debouncedSearch || undefined, category });
-  const isFiltering = !!debouncedSearch || category !== "All";
-
+  
   return (
     <div className="container space-y-12 py-8 md:py-12">
       {/* Hero */}
