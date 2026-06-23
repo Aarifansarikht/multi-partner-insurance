@@ -67,8 +67,8 @@ export default function PlansPage() {
         </p>
       </section>
 
-      {/* Featured carousel — hidden while actively filtering to keep focus */}
-      {!isFiltering && (
+
+      { (
         <>
           {featured.status === "loading" && <FeaturedCarouselSkeleton />}
           {featured.status === "error" && (
