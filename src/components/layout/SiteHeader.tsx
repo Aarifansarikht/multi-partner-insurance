@@ -20,7 +20,7 @@ export function SiteHeader() {
           className="group flex min-w-0 items-center gap-2 rounded-sm sm:gap-2.5"
           aria-label={`${partner.name} — go to home`}
         >
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-primary text-primary-foreground transition-transform duration-150 group-hover:scale-[1.03] sm:size-9">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-150 group-hover:scale-[1.03] sm:size-9">
             <partner.Icon className="size-4 sm:size-5" />
           </span>
           <span className="flex min-w-0 flex-col leading-none">
