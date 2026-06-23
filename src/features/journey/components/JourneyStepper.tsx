@@ -5,11 +5,7 @@ import { useJourney } from "@/features/journey/selectors";
 import { isStepUnlocked } from "@/features/journey/progress";
 import { cn } from "@/lib/utils";
 
-/**
- * Progress indicator across the five journey steps. Completed steps are
- * navigable; locked (future) steps are inert. Compact on mobile, full rail on
- * desktop.
- */
+
 export function JourneyStepper() {
   const { pathname } = useLocation();
   const journey = useJourney();

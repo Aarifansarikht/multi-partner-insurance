@@ -23,7 +23,6 @@ export function UserMenu() {
   if (!user) return null;
 
   const handleLogout = () => {
-    // Logging out clears the session AND any in-progress purchase data.
     dispatch(clearSession());
     dispatch(resetJourney());
     navigate(ROUTES.home);

@@ -1,12 +1,6 @@
 import type { Plan } from "@/types/plan";
 
-/**
- * Mock catalog.
- *
- * Shaped exactly as a real `/plans` API response would be so swapping in a
- * backend later is a one-line change in the API layer. Cover amounts are in
- * rupees; `ratePerLakh` is the annual premium per ₹1,00,000 of cover.
- */
+
 export const PLANS: Plan[] = [
   {
     id: "term-secure-shield",

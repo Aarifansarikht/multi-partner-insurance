@@ -2,14 +2,7 @@ import type { Plan, PremiumQuote } from "@/types/plan";
 
 const GST_RATE = 0.18;
 
-/**
- * Deterministic premium model.
- *
- * Base annual premium scales linearly with cover (per-lakh rate) and rises
- * gently with the policy term to reflect the longer risk horizon. GST is then
- * applied on top. Kept as a pure function so the same number is shown on the
- * detail page, the review screen and the payment step.
- */
+
 export function calculatePremium(
   plan: Plan,
   coverAmount: number,

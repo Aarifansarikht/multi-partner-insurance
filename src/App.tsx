@@ -6,7 +6,7 @@ import { RouteFallback } from "@/components/feedback/RouteFallback";
 import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
 import { JourneyLayout } from "@/features/journey/JourneyLayout";
 
-// Route-level code splitting: each page is its own chunk, loaded on demand.
+
 const PlansPage = lazy(() => import("@/features/plans/pages/PlansPage"));
 const PlanDetailPage = lazy(
   () => import("@/features/plans/pages/PlanDetailPage"),
@@ -21,16 +21,7 @@ const ReviewPage = lazy(() => import("@/features/journey/pages/ReviewPage"));
 const PaymentPage = lazy(() => import("@/features/journey/pages/PaymentPage"));
 const ResultPage = lazy(() => import("@/features/journey/pages/ResultPage"));
 
-/**
- * Route tree.
- *
- * - `/` and `/plans/:planId` are public browsing pages.
- * - `/login` is the entry to the protected flow.
- * - `/journey/*` (kyc -> payment) is gated by ProtectedRoute and shares the
- *   stepper layout + step guard.
- * - `/journey/result` is protected but sits outside the stepper layout so the
- *   success/failure screen renders full-width.
- */
+
 function App() {
   return (
     <Routes>

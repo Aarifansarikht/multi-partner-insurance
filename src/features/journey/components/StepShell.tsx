@@ -2,11 +2,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-/**
- * Heading block shared by every journey step. Moves keyboard/screen-reader focus
- * to the step title on mount so navigating between steps announces the new step
- * and lands focus in the right place.
- */
+
 export function StepHeader({
   title,
   description,

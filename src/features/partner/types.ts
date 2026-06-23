@@ -1,15 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 
-/**
- * The set of CSS custom properties a partner overrides. Keys match the variable
- * names declared in index.css (minus the `--` prefix); values are flat hex
- * strings that slot straight into `var(--token)`.
- *
- * Status colours (success / warning / destructive) are intentionally not
- * partner-overridable — they keep a consistent meaning across every brand.
- * Tints (`*-soft`) and hover shades (`*-hover`) are explicit solid colours
- * rather than opacity, so theming stays simple and predictable.
- */
+
 export interface PartnerTokens {
   background: string;
   foreground: string;

@@ -7,11 +7,6 @@ interface State {
   error: Error | null;
 }
 
-/**
- * App-wide error boundary. Catches render-time crashes and shows a recoverable
- * fallback instead of a blank screen. Uses plain DOM (no token-styled UI
- * components) so it still renders even if a provider is the thing that failed.
- */
 export class ErrorBoundary extends Component<Props, State> {
   state: State = { error: null };
 
@@ -20,7 +15,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    // In a real app this would report to an error-tracking service.
+   
     console.error("Unhandled UI error:", error, info.componentStack);
   }
 

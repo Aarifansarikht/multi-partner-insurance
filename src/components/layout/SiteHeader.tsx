@@ -7,10 +7,7 @@ import { useAuth } from "@/features/auth/selectors";
 import { UserMenu } from "@/features/auth/components/UserMenu";
 import { Button } from "@/components/ui/button";
 
-/**
- * Application header. The brand block reflects the active partner; the action
- * slot carries the partner switcher, theme toggle and account/login control.
- */
+
 export function SiteHeader() {
   const partner = useActivePartner();
   const { isAuthenticated } = useAuth();

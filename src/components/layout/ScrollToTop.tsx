@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-/** Reset scroll position on pathname change for a native, app-like feel. */
+
 export function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {

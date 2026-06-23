@@ -7,19 +7,13 @@ export interface ThemeState {
   mode: ThemeMode;
 }
 
-/**
- * Theme is independent of partner. On first visit (nothing persisted) we respect
- * the OS `prefers-color-scheme`; thereafter the user's explicit choice wins.
- */
+
 export function getInitialThemeState(): ThemeState {
   const persisted = readPersisted<ThemeState>("theme");
   if (persisted?.mode === "light" || persisted?.mode === "dark") {
     return { mode: persisted.mode };
   }
-  // const prefersDark =
-  //   typeof window !== "undefined" &&
-  //   window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-  // return { mode: prefersDark ? "dark" : "light" };
+  // Default to light when nothing is persisted.
   return { mode: "light" };
 }
 

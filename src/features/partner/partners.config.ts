@@ -1,14 +1,7 @@
 import { Compass, Leaf, ShieldCheck } from "lucide-react";
 import type { Partner } from "./types";
 
-/**
- * Partner registry — the single source of truth for branding.
- *
- * To onboard a new partner, add ONE object to this array: an id, name, icon and
- * a light + dark token set (flat hex). Everything else (theme switching,
- * persistence, the switcher UI) picks it up automatically because the rest of
- * the app only ever reads semantic tokens, never a partner-specific value.
- */
+
 export const PARTNERS: Partner[] = [
   {
     id: "aegis",

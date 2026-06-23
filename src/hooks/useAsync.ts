@@ -11,12 +11,7 @@ export interface AsyncState<T> {
   refetch: () => void;
 }
 
-/**
- * Runs an async function on mount and whenever `deps` change, exposing
- * loading/success/error/empty-friendly state. The previous in-flight request is
- * aborted on each re-run so a slow earlier response can never overwrite a newer
- * one (used by the debounced plans search).
- */
+
 export function useAsync<T>(
   fn: (signal: AbortSignal) => Promise<T>,
   deps: React.DependencyList,

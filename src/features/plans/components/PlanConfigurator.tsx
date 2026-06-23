@@ -16,11 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { calculatePremium, normaliseCover } from "@/features/plans/premium";
 import { formatCompactCover, formatCurrency } from "@/lib/format";
 
-/**
- * Cover + term configurator. The selection is held in the URL query string
- * (?cover=&term=) so the resulting premium is shareable and survives a refresh,
- * and so "Buy Now" can hand the exact configuration to the journey.
- */
+
 export function PlanConfigurator({
   plan,
   onBuy,

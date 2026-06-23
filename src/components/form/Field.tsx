@@ -2,10 +2,7 @@ import type { ReactNode } from "react";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-/**
- * Presentational field wrapper: consistent label hierarchy, helper text and
- * inline, accessible error messaging shared by every journey form.
- */
+
 export function Field({
   id,
   label,
@@ -44,7 +41,7 @@ export function Field({
   );
 }
 
-/** A visually grouped section of fields with an optional heading. */
+
 export function FieldSection({
   title,
   description,

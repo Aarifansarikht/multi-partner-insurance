@@ -46,14 +46,10 @@ result screens) is walkable out of the box.
 
 To exercise the real Razorpay **test** widget instead:
 
-```bash
-cp .env.example .env
-# then edit .env:
+
+# add .env:
 VITE_RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxxxx
 ```
-
-`.env` is git-ignored; only `.env.example` is committed. No secret key is used
-anywhere (Checkout only needs the publishable key id).
 
 In Razorpay test mode use card `4111 1111 1111 1111` with any future expiry and
 any CVV, or UPI id `success@razorpay`.
@@ -101,34 +97,7 @@ Each feature owns its slice, components, hooks and types. Cross-feature sharing
 goes through `components/`, `lib/` and `store/`. This keeps related code together
 and makes a feature easy to reason about (or delete) in isolation.
 
-### Multi-partner theming (the core architectural piece)
 
-The whole brand is driven by **semantic design tokens** (the same indirection
-shadcn/ui uses), kept deliberately simple:
-
-- `tailwind.config.ts` maps semantic colours (`primary`, `surface`, `border`,
-  `success`, …) to CSS custom properties via `var(--token)`. The token values
-  are **flat hex** (e.g. `--primary: #2647c9`) — no HSL math, no opacity
-  modifiers and no gradients in the UI. Tints and hover shades are their own
-  solid tokens (`*-soft`, `*-hover`) rather than `/opacity` utilities, so the
-  palette stays predictable and fully theme-driven.
-- Each partner is **one config object** in
-  [`features/partner/partners.config.ts`](src/features/partner/partners.config.ts)
-  carrying a **light** and **dark** token set (hex).
-- A single [`PartnerThemeProvider`](src/features/partner/PartnerThemeProvider.tsx),
-  driven by Redux, writes the active partner's tokens onto `document.documentElement`
-  and toggles the `dark` class. **Nothing else in the UI knows about partners** —
-  every component just uses `bg-primary`, `text-foreground`, etc.
-- Light/dark mode is an **independent** toggle (`html.dark`); because each
-  partner ships both token sets, the two systems compose without conflict.
-- Status colours (`success` / `warning` / `destructive`) are constant across
-  partners so their meaning never changes.
-
-**Adding a 4th partner is one object** in that config file — no other change is
-needed. Partner selection and theme are persisted, so both survive a reload.
-
-There are **no inline hex/rgb values** in the JSX layer; all colour flows through
-tokens so theming propagates app-wide.
 
 ### State management & persistence
 
@@ -182,23 +151,7 @@ holding the secret key — this is intentionally stubbed and called out here.
 
 ---
 
-## Stretch goals included
 
-- ✅ Step guard (no jumping to unfinished steps)
-- ✅ Resume journey after refresh (exact step + entered data restored)
-- ✅ View state in the URL (current step, plan cover/term, search & filters)
-- ✅ Debounced search + filtering with in-flight request cancellation
-- ✅ Toasts for key events (login, payment, session expiry)
-- ✅ Global error boundary
-- ✅ Route-level code splitting (lazy routes + Suspense skeleton)
-- ✅ Accessibility — labels/ARIA, keyboard nav, focus moved between steps,
-  skip-to-content link, respects OS light/dark preference on first visit
-- ✅ Schema-based validation with inline, accessible errors and
-  disabled-while-submitting
-- ✅ Polished loading — skeletons matching real content, not bare spinners
-- ✅ Automated tests for the auth guard, journey step logic and validation
-
----
 
 ## What I'd improve with more time
 
